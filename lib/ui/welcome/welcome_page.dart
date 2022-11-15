@@ -23,7 +23,7 @@ class WelcomePage extends StatelessWidget {
             flex: 4,
             child: Container(
               padding: const EdgeInsets.only(left: 32, right: 32),
-              child: Image.asset('assets/images/logo_white.png'),
+              child: Image.asset(AssetsImages.logoWhite),
             ),
           ),
           Expanded(
