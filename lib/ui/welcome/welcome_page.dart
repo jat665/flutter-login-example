@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../constants.dart';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 
@@ -30,18 +34,18 @@ class WelcomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
-                        'Comenzar ahora mismo',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.welcomeTitle,
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       Text(
-                        'Te damos la bienvenida a ser parte de Urbano, empresa líder en distribución logistica de última milla, con Kriptón HD podrás gestionar tus pedidos.',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.welcomeMessage,
+                        style: const TextStyle(
                           fontSize: 18,
                         ),
                       ),
@@ -56,8 +60,9 @@ class WelcomePage extends StatelessWidget {
                       const Spacer(),
                       TextButton(
                         onPressed: () {},
-                        child: const Text('SIGUIENTE',
-                            style: TextStyle(color: Colors.red)),
+                        child: Text(
+                          AppLocalizations.of(context)!.labelNext,
+                        ),
                       ),
                     ],
                   ),
