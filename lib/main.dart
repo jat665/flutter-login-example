@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kripton/ui/login/login_page.dart';
 import 'package:kripton/ui/welcome/welcome_page.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,7 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.red,
       ),
-      home: const WelcomePage(),
+      routes: {
+        WelcomePage.route: (context) => const WelcomePage(),
+        LoginPage.route: (context) => const LoginPage(),
+      },
+      initialRoute: WelcomePage.route,
+
+      home: const LoginPage(),
     );
   }
 }

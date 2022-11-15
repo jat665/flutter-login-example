@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kripton/ui/login/login_page.dart';
 
 import '../../constants.dart';
 
@@ -6,6 +7,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
+
+  static const route = '/welcome';
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +62,7 @@ class WelcomePage extends StatelessWidget {
                     children: [
                       const Spacer(),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.popAndPushNamed(context, LoginPage.route),
                         child: Text(
                           AppLocalizations.of(context)!.labelNext,
                         ),
