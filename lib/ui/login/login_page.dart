@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kripton/constants.dart';
+
+import 'bloc/login_bloc.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -35,24 +38,27 @@ class LoginPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const LogoSection(),
-              LoginForm(
-                usernameController: usernameController,
-                passwordController: passwordController,
-              ),
-              TextButton(
-                onPressed: () => {},
-                child: Text(
-                  AppLocalizations.of(context)!.loginSignUp,
-                  style: const TextStyle(
-                    color: Colors.white,
+          child: BlocProvider(
+            create: (context) => LoginBloc(),
+            child: Column(
+              children: [
+                const LogoSection(),
+                LoginForm(
+                  usernameController: usernameController,
+                  passwordController: passwordController,
+                ),
+                TextButton(
+                  onPressed: () => {},
+                  child: Text(
+                    AppLocalizations.of(context)!.loginSignUp,
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 60),
-            ],
+                const SizedBox(height: 60),
+              ],
+            ),
           ),
         ),
       ),
@@ -74,38 +80,43 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          InputField(
-            prefixIcon: CupertinoIcons.person_alt_circle,
-            hintText: AppLocalizations.of(context)!.loginUsernameHint,
-            controller: usernameController,
-          ),
-          const SizedBox(height: 16),
-          InputField(
-            prefixIcon: CupertinoIcons.lock_circle,
-            suffixIcon: IconButton(
-              color: Colors.white,
-              icon: const Icon(CupertinoIcons.eye_solid),
-              onPressed: () {},
-            ),
-            hintText: AppLocalizations.of(context)!.loginPasswordHint,
-            controller: passwordController,
-            obscureText: true,
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                shape: const StadiumBorder(),
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, state) {
+          return Column(
+            children: [
+              InputField(
+                prefixIcon: CupertinoIcons.person_alt_circle,
+                hintText: AppLocalizations.of(context)!.loginUsernameHint,
+                controller: usernameController,
               ),
-              child: Text(AppLocalizations.of(context)!.labelLogin),
-            ),
-          ),
-        ],
+              const SizedBox(height: 16),
+              InputField(
+                key: const Key(WidgetKeys.passwordTextField),
+                prefixIcon: CupertinoIcons.lock_circle,
+                suffixIcon: IconButton(
+                  color: Colors.white,
+                  icon: Icon(state.isPasswordVisible ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill),
+                  onPressed: () => context.read<LoginBloc>().add(LoginTogglePasswordVisibilityEvent()),
+                ),
+                hintText: AppLocalizations.of(context)!.loginPasswordHint,
+                controller: passwordController,
+                obscureText: !state.isPasswordVisible,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: Text(AppLocalizations.of(context)!.labelLogin),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
