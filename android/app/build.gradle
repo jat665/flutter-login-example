@@ -51,6 +51,20 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        flavorDimensions "env"
+
+        productFlavors {
+            dev {
+                dimension "env"
+                applicationIdSuffix ".dev"
+                resValue "string", "app_name", "Dev Kriptón"
+            }
+            prod {
+                dimension "env"
+                resValue "string", "app_name", "Kriptón"
+            }
+        }
     }
 
     buildTypes {

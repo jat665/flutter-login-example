@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kripton/app_config.dart';
 import 'package:kripton/constants.dart';
 
 import 'bloc/login_bloc.dart';
@@ -137,9 +138,9 @@ class LogoSection extends StatelessWidget {
           child: Image.asset(AssetsImages.logoWhite),
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Kriptón HD Dev',
-          style: TextStyle(
+        Text(
+          AppConfig.of(context).appName,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 18,
             fontWeight: FontWeight.bold,
