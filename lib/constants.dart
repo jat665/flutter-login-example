@@ -6,3 +6,7 @@ class AssetsImages {
 class WidgetKeys {
   static const passwordTextField = 'passwordTextField';
 }
+
+class PreferencesKeys {
+  static const wasWelcomeShowed = 'wasWelcomeShowed';
+}
