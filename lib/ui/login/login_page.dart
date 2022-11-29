@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kripton/app_config.dart';
 import 'package:kripton/constants.dart';
+import 'package:kripton/repository/user_repository.dart';
+import 'package:kripton/ui/home/home_page.dart';
 
 import 'bloc/login_bloc.dart';
 
@@ -40,7 +42,9 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: BlocProvider(
-            create: (context) => LoginBloc(),
+            create: (context) => LoginBloc(
+              userRepository: context.read<UserRepository>(),
+            ),
             child: Column(
               children: [
                 const LogoSection(),
@@ -81,45 +85,83 @@ class LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: BlocBuilder<LoginBloc, LoginState>(
-        builder: (context, state) {
-          return Column(
-            children: [
-              InputField(
-                prefixIcon: CupertinoIcons.person_alt_circle,
-                hintText: AppLocalizations.of(context)!.loginUsernameHint,
-                controller: usernameController,
-              ),
-              const SizedBox(height: 16),
-              InputField(
-                key: const Key(WidgetKeys.passwordTextField),
-                prefixIcon: CupertinoIcons.lock_circle,
-                suffixIcon: IconButton(
-                  color: Colors.white,
-                  icon: Icon(state.isPasswordVisible ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill),
-                  onPressed: () => context.read<LoginBloc>().add(LoginTogglePasswordVisibilityEvent()),
-                ),
-                hintText: AppLocalizations.of(context)!.loginPasswordHint,
-                controller: passwordController,
-                obscureText: !state.isPasswordVisible,
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: const StadiumBorder(),
-                  ),
-                  child: Text(AppLocalizations.of(context)!.labelLogin),
-                ),
-              ),
-            ],
-          );
+      child: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          if (state.goToHomePage != null) {
+            Navigator.popAndPushNamed(context, HomePage.route);
+          }
+          if (state.error != null) {
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                      title: const Text('Error'),
+                      content: Text(state.error!),
+                      actions: [
+                        TextButton(
+                          child: const Text('Ok'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    ));
+          }
         },
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
+            return Column(
+              children: [
+                InputField(
+                  prefixIcon: CupertinoIcons.person_alt_circle,
+                  hintText: AppLocalizations.of(context)!.loginUsernameHint,
+                  controller: usernameController,
+                ),
+                const SizedBox(height: 16),
+                InputField(
+                  key: const Key(WidgetKeys.passwordTextField),
+                  prefixIcon: CupertinoIcons.lock_circle,
+                  suffixIcon: IconButton(
+                    color: Colors.white,
+                    icon: Icon(state.isPasswordVisible ? CupertinoIcons.eye_slash_fill : CupertinoIcons.eye_fill),
+                    onPressed: () => togglePasswordVisibility(context),
+                  ),
+                  hintText: AppLocalizations.of(context)!.loginPasswordHint,
+                  controller: passwordController,
+                  obscureText: !state.isPasswordVisible,
+                ),
+                const SizedBox(height: 16),
+                state.isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation(Colors.black),
+                      )
+                    : SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => doLogin(context),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            shape: const StadiumBorder(),
+                          ),
+                          child: Text(AppLocalizations.of(context)!.labelLogin),
+                        ),
+                      ),
+              ],
+            );
+          },
+        ),
       ),
     );
+  }
+
+  void doLogin(BuildContext context) {
+    context.read<LoginBloc>().add(LoginDoLoginEvent(
+          username: usernameController.text,
+          password: passwordController.text,
+        ));
+  }
+
+  void togglePasswordVisibility(BuildContext context) {
+    context.read<LoginBloc>().add(LoginTogglePasswordVisibilityEvent());
   }
 }
 
