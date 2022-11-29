@@ -4,4 +4,4 @@ abstract class WelcomeEvent {
   const WelcomeEvent();
 }
 
-class WelcomeInitEvent extends WelcomeEvent {}
+class WelcomeContinueClickedEvent extends WelcomeEvent {}

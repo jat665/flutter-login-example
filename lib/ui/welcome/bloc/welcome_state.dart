@@ -1,10 +1,24 @@
 part of 'welcome_bloc.dart';
 
-abstract class WelcomeState extends Equatable {
-  const WelcomeState();
-}
+class WelcomeState extends Equatable {
+  final bool? goToLoginPage;
 
-class WelcomeInitial extends WelcomeState {
+  const WelcomeState({
+    this.goToLoginPage,
+  });
+
+  const WelcomeState.initial({
+    this.goToLoginPage,
+  });
+
+  WelcomeState copyWith({
+    bool? goToLoginPage,
+  }) {
+    return WelcomeState(
+      goToLoginPage: goToLoginPage,
+    );
+  }
+
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [goToLoginPage];
 }
